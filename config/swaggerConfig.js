@@ -12,10 +12,7 @@ const swaggerOptions = {
     },
     servers: [
       {
-        url:
-          process.env.NODE_ENV === "production"
-            ? "https://mentalk-server.netlify.app" // 배포된 서버 URL
-            : "http://localhost:8080", // 개발 환경에서 로컬 URL 사용
+        url: "https://mentalk-server.netlify.app/api", // 배포된 서버 URL
       },
     ],
   },
