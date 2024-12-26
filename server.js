@@ -48,6 +48,8 @@ const app = express();
 
 const server = http.createServer(app);
 
+const port = process.env.PORT || 8080;
+
 //챗 통신 서버 코드
 const io = new Server(server, {
   cors: {
@@ -146,11 +148,22 @@ app.use("/warning", warningRouter);
 app.use("/signup/admin", signupAdminRouter);
 app.use("/admin", adminRouter);
 
-app.listen(process.env.PORT, () => {
-  console.log(`${process.env.PORT}번 포트에서 서버가 실행 중...`);
-  connectDB();
-});
+// app.listen(port, () => {
+//   console.log(`${port}번 포트에서 서버가 실행 중...`);
+//   connectDB();
+// });
 
 app.get("/", (req, res) => {
   res.send("서버 접속 성공");
 });
+
+const serverless = require("serverless-http");
+module.exports.handler = serverless(app);
+
+// 로컬 개발 환경에서는 `app.listen()` 사용
+if (process.env.NODE_ENV === "development") {
+  app.listen(port, () => {
+    console.log(`${port}번 포트에서 서버가 실행 중...`);
+    connectDB();
+  });
+}
