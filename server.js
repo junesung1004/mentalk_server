@@ -16,6 +16,7 @@
 const express = require("express");
 const connectDB = require("./config/db.js");
 require("dotenv").config();
+const serverless = require("serverless-http"); // serverless-http 모듈 추가
 const cors = require("cors");
 const path = require("path");
 const swaggerUi = require("swagger-ui-express");
@@ -48,13 +49,10 @@ const app = express();
 
 const server = http.createServer(app);
 
-const port = process.env.PORT || 8080;
-
 //챗 통신 서버 코드
 const io = new Server(server, {
   cors: {
-    // origin: "http://localhost:3000",
-    origin: "https://mentalk-client.netlify.app",
+    origin: "http://localhost:3000",
     methods: ["GET", "POST"],
   },
 });
@@ -95,8 +93,7 @@ server.listen(8081, () => {
 // CORS 설정.
 app.use(
   cors({
-    // origin: "http://localhost:3000", // 허용할 도메인
-    origin: "https://mentalk-client.netlify.app", // 허용할 도메인
+    origin: "http://localhost:3000", // 허용할 도메인
     methods: "GET,HEAD,PUT,POST,DELETE", // 허용할 HTTP 메소드
     allowedHeaders: ["Authorization", "Content-Type"], // 허용할 헤더
     credentials: true, // 쿠키 전송 허용
@@ -148,8 +145,8 @@ app.use("/warning", warningRouter);
 app.use("/signup/admin", signupAdminRouter);
 app.use("/admin", adminRouter);
 
-// app.listen(port, () => {
-//   console.log(`${port}번 포트에서 서버가 실행 중...`);
+// app.listen(process.env.PORT, () => {
+//   console.log(`${process.env.PORT}번 포트에서 서버가 실행 중...`);
 //   connectDB();
 // });
 
@@ -157,13 +154,5 @@ app.get("/", (req, res) => {
   res.send("서버 접속 성공");
 });
 
-const serverless = require("serverless-http");
+// Express 서버를 serverless-http로 래핑
 module.exports.handler = serverless(app);
-
-// 로컬 개발 환경에서는 `app.listen()` 사용
-if (process.env.NODE_ENV === "development") {
-  app.listen(port, () => {
-    console.log(`${port}번 포트에서 서버가 실행 중...`);
-    connectDB();
-  });
-}

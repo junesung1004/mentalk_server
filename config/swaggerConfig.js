@@ -14,7 +14,7 @@ const swaggerOptions = {
     },
     servers: [
       {
-        url: "https://mentalk-server.netlify.app/", // 서버 URL (로컬 또는 배포된 서버)
+        url: "http://localhost:8080", // 서버 URL (로컬 또는 배포된 서버)
       },
     ],
   },
